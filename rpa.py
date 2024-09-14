@@ -69,13 +69,22 @@ class NewsWebScraper:
         except Exception as e:
             self.logger.error(f"ERROR sort_by_newest() | Error during selecting option: {e}")
         
-    def get_element_list(self, element_selector):
+    def get_element_list(self, element_selector, src=False):
         wait = WebDriverWait(self.driver, 100)
-        try: 
-            elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, element_selector)))
-            return [element.text for element in elements]
-        except Exception as e:
-            self.logger.error(f"ERROR get_element_list(): {element_selector} | Error: {e}")
+        retries = 3
+        get_element = element_selector.split('-')[-1].split(' ')[0].title()
+        for attempt in range(retries):
+            try: 
+                elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, element_selector)))
+                self.logger.info(f"{get_element} gotten on attempt {attempt+1}.")
+                if not src:
+                    return [element.text for element in elements]
+                else:
+                    return [element.get_attribute('src') for element in elements]
+            except Exception as e:
+                self.logger.warning(f"Could not get {get_element} on attempt {attempt+1}. Retrying...")
+                if attempt == retries - 1:
+                    self.logger.error(f"ERROR get_element_list(): {get_element} | Error: {e}")
 
     def get_news_titles(self):
         return self.get_element_list('h3.promo-title a')
@@ -87,13 +96,7 @@ class NewsWebScraper:
         return self.get_element_list('p.promo-description')
     
     def get_news_pic_filenames(self):
-        wait = WebDriverWait(self.driver, 100)
-        try:
-            elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'picture img.image')))
-            return [element.get_attribute('src') for element in elements]
-        except Exception as e:
-            print(f"ERROR get_news_pic_filename() | Error: {e}")
-            return None
+        return self.get_element_list('picture img.image', src=True)
 
     def get_news(self):
         titles = self.get_news_titles()
