@@ -2,6 +2,9 @@ import time
 import logging
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from RPA.core.webdriver import start
 
 
@@ -28,7 +31,7 @@ class NewsWebScraper:
             self.driver = start(browser, options=options)
             self.logger.info("WebDriver started successfully.")
         except Exception as e:
-            self.logger.error(f"ERR0R set_webdriver(): Failed to start WebDriver: {e}")
+            self.logger.error(f"ERR0R set_webdriver() | Failed to start WebDriver: {e}")
 
     def open_url(self, url: str):
         if self.driver:
@@ -36,9 +39,9 @@ class NewsWebScraper:
                 self.driver.get(url)
                 self.logger.info(f"Opened URL: {url}")
             except Exception as e:
-                self.logger.error(f"ERROR open_url(): Failed to open URL {url}: {e}")
+                self.logger.error(f"ERROR open_url() | Failed to open URL {url}: {e}")
         else:
-            self.logger.error("ERR0R open_url(): WebDriver not initialized. You must call set_webdriver() first.")
+            self.logger.error("ERR0R open_url() | WebDriver not initialized. You must call set_webdriver() first.")
 
     def search(self, search_query: str):
         try:
@@ -50,7 +53,17 @@ class NewsWebScraper:
             search_field.submit()
             self.logger.info(f"Search query submitted.")
         except Exception as e:
-            self.logger.error(f"ERROR search(): Could not find element: {e}")
+            self.logger.error(f"ERROR search() | Could not find element: {e}")
+
+    def sort_by_newest(self):
+        wait = WebDriverWait(self.driver, 10)
+        try:
+            sort_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.select-input')))
+            select = Select(sort_element)
+            select.select_by_visible_text('Newest')
+        except Exception as e:
+            self.logger.error(f"ERROR sort_by_newest() | Error during selecting option: {e}")
+        
 
     def close_all(self):
         if self.driver:
@@ -58,9 +71,9 @@ class NewsWebScraper:
                 self.driver.quit()
                 self.logger.info("WebDriver closed successfully.")
             except Exception as e:
-                self.logger.error(f"ERROR close_all(): Failed to close WebDriver: {e}")
+                self.logger.error(f"ERROR close_all() | Failed to close WebDriver: {e}")
         else:
-            self.logger.error("ERROR close_all(): WebDriver not initialized.")
+            self.logger.error("ERROR close_all() | WebDriver not initialized.")
 
 
 def main():
@@ -72,8 +85,9 @@ def main():
     news_scraper.set_webdriver()
     news_scraper.open_url(url)
     news_scraper.search('Taylor Swift')
+    news_scraper.sort_by_newest()
 
-    time.sleep(1)
+    time.sleep(3)
 
     news_scraper.close_all()
 
