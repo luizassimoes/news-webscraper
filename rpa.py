@@ -106,6 +106,24 @@ class NewsWebScraper:
             query_count.append(title_count + description_count)
         self.logger.info(f"Search query in Title counted.")
         return query_count
+    
+    def title_contains_money(self, titles):
+        money_patterns = [
+            r'\$\d{1,3}(,\d{3})*(\.\d{2})?',      # Pattern for $11.1 or $111,111.11
+            r'\b\d+(\.\d{2})?\s?(dollars|USD)\b'  # Pattern for 11 dollars or 11 USD
+        ]
+        money_in_query = []
+        for title in titles:
+            money = False
+            for pattern in money_patterns:
+                if re.search(pattern, title, re.IGNORECASE):
+                    money = True
+                    break
+            money_in_query.append(money)
+        self.logger.info(f"Contains money analyzed.")
+        return money_in_query
+            
+
     def get_news(self):
         titles = self.get_news_titles()
         descriptions = self.get_news_descriptions()
