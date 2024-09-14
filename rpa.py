@@ -40,6 +40,13 @@ class NewsWebScraper:
         else:
             self.logger.error("ERR0R open_url(): WebDriver not initialized. You must call set_webdriver() first.")
 
+    def search(self, search_query: str):
+        search_button = self.driver.find_element(By.XPATH, '/html/body/ps-header/header/div[2]/button')
+        search_button.click()
+        search_field = self.driver.find_element(By.XPATH, '/html/body/ps-header/header/div[2]/div[2]/form/label/input')
+        search_field.send_keys(search_query)
+        search_field.submit()
+
     def close_all(self):
         if self.driver:
             try:
@@ -59,6 +66,7 @@ def main():
     news_scraper = NewsWebScraper()
     news_scraper.set_webdriver()
     news_scraper.open_url(url)
+    news_scraper.search('Taylor Swift')
 
     time.sleep(1)
 
