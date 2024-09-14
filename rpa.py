@@ -1,7 +1,7 @@
 import os
 import time
 import logging
-import openpyxl
+from openpyxl import Workbook
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
@@ -58,7 +58,7 @@ class NewsWebScraper:
             self.logger.error(f"ERROR search() | Could not find element: {e}")
 
     def sort_by_newest(self):
-        wait = WebDriverWait(self.driver, 50)
+        wait = WebDriverWait(self.driver, 100)
         try:
             sort_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.select-input')))
             select = Select(sort_element)
@@ -68,7 +68,7 @@ class NewsWebScraper:
             self.logger.error(f"ERROR sort_by_newest() | Error during selecting option: {e}")
         
     def get_element_list(self, element_selector):
-        wait = WebDriverWait(self.driver, 50)
+        wait = WebDriverWait(self.driver, 100)
         try: 
             elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, element_selector)))
             return [element.text for element in elements]
@@ -85,7 +85,7 @@ class NewsWebScraper:
         return self.get_element_list('p.promo-description')
     
     def get_news_pic_filenames(self):
-        wait = WebDriverWait(self.driver, 50)
+        wait = WebDriverWait(self.driver, 100)
         try:
             elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'picture img.image')))
             return [element.get_attribute('src') for element in elements]
@@ -95,11 +95,11 @@ class NewsWebScraper:
 
     def get_news(self):
         titles = self.get_news_titles()
-        dates = self.get_news_dates()
         descriptions = self.get_news_descriptions()
+        dates = self.get_news_dates()
         pic_filenames = self.get_news_pic_filenames()
 
-        return [titles, dates, descriptions, pic_filenames]
+        return [titles, descriptions, dates, pic_filenames]
 
     def close_all(self):
         if self.driver:
@@ -111,6 +111,22 @@ class NewsWebScraper:
         else:
             self.logger.error("ERROR close_all() | WebDriver not initialized.")
 
+    def to_excel(self, data):
+        wb = Workbook()
+        sheet = wb.active
+
+        headers = ['Title', 'Description', 'Date', 'Filename']
+        for i_col, header in enumerate(headers):
+            sheet.cell(row=1, column=i_col+1).value = header
+
+            if data[i_col] is not None:
+                for i_row, val in enumerate(data[i_col]):
+                    sheet.cell(row=i_row+2, column=i_col+1).value = val
+            else:
+                self.logger.error(f"ERROR to_excel() | {header} list is None.")
+
+        sheet.title = 'NEWS'
+        return wb
 
 def main():
     url = 'https://www.latimes.com/'
@@ -124,6 +140,9 @@ def main():
     news_scraper.sort_by_newest()
     
     news_data = news_scraper.get_news()
+
+    wb = news_scraper.to_excel(news_data)
+    wb.save('./News.xlsx')
 
 
     time.sleep(3)
