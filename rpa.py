@@ -1,6 +1,8 @@
 import os
+import re
 import time
 import logging
+import requests
 from openpyxl import Workbook
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -161,19 +163,25 @@ class NewsWebScraper:
 
 def main():
     url = 'https://www.latimes.com/'
+    query = 'euro'
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
     news_scraper = NewsWebScraper()
     news_scraper.set_webdriver()
     news_scraper.open_url(url)
-    news_scraper.search('Taylor Swift')
+    news_scraper.search(query)
     news_scraper.sort_by_newest()
     
-    news_data = news_scraper.get_news()
+    titles, descriptions, dates, pic_filenames = news_scraper.get_news()
+    # print(titles, descriptions, dates, pic_filenames)
+    count_query = news_scraper.count_search_query(query, titles, descriptions)
+    contains_money = news_scraper.title_contains_money(titles)
+
+    news_data = [titles, descriptions, dates, pic_filenames, count_query, contains_money]
 
     wb = news_scraper.to_excel(news_data)
-    wb.save('./News.xlsx')
+    wb.save('./outputs/News.xlsx')
 
 
     time.sleep(3)
