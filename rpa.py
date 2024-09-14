@@ -41,11 +41,16 @@ class NewsWebScraper:
             self.logger.error("ERR0R open_url(): WebDriver not initialized. You must call set_webdriver() first.")
 
     def search(self, search_query: str):
-        search_button = self.driver.find_element(By.XPATH, '/html/body/ps-header/header/div[2]/button')
-        search_button.click()
-        search_field = self.driver.find_element(By.XPATH, '/html/body/ps-header/header/div[2]/div[2]/form/label/input')
-        search_field.send_keys(search_query)
-        search_field.submit()
+        try:
+            search_button = self.driver.find_element(By.XPATH, '/html/body/ps-header/header/div[2]/button')
+            search_button.click()
+            self.logger.info(f"Search button clicked.")
+            search_field = self.driver.find_element(By.XPATH, '/html/body/ps-header/header/div[2]/div[2]/form/label/input')
+            search_field.send_keys(search_query)
+            search_field.submit()
+            self.logger.info(f"Search query submitted.")
+        except Exception as e:
+            self.logger.error(f"ERROR search(): Could not find element: {e}")
 
     def close_all(self):
         if self.driver:
