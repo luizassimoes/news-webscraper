@@ -146,7 +146,7 @@ class NewsWebScraper:
         wb = Workbook()
         sheet = wb.active
 
-        headers = ['Title', 'Description', 'Date', 'Filename']
+        headers = ['Title', 'Description', 'Date', 'Filename', 'Count Query in Title', 'Contains Money in Title']
         for i_col, header in enumerate(headers):
             sheet.cell(row=1, column=i_col+1).value = header
 
@@ -155,8 +155,8 @@ class NewsWebScraper:
                     sheet.cell(row=i_row+2, column=i_col+1).value = val
             else:
                 self.logger.error(f"ERROR to_excel() | {header} list is None.")
-
         sheet.title = 'NEWS'
+        self.logger.info("Excel done.")
         return wb
 
 def main():
