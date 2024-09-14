@@ -98,6 +98,14 @@ class NewsWebScraper:
     def get_news_pic_filenames(self):
         return self.get_element_list('picture img.image', src=True)
 
+    def count_search_query(self, query, titles, descriptions):
+        query_count = []
+        for i in range(len(titles)):
+            title_count = titles[i].count(query)
+            description_count = descriptions[i].count(query)
+            query_count.append(title_count + description_count)
+        self.logger.info(f"Search query in Title counted.")
+        return query_count
     def get_news(self):
         titles = self.get_news_titles()
         descriptions = self.get_news_descriptions()
