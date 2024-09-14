@@ -130,7 +130,7 @@ class NewsWebScraper:
         dates = self.get_news_dates()
         pic_filenames = self.get_news_pic_filenames()
 
-        return [titles, descriptions, dates, pic_filenames]
+        return titles, descriptions, dates, pic_filenames
 
     def close_all(self):
         if self.driver:
