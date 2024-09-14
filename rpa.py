@@ -60,9 +60,11 @@ class NewsWebScraper:
     def sort_by_newest(self):
         wait = WebDriverWait(self.driver, 100)
         try:
-            sort_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.select-input')))
-            select = Select(sort_element)
-            select.select_by_visible_text('Newest')
+            retries = 2
+            for _ in range(retries):
+                sort_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.select-input')))
+                select = Select(sort_element)
+                select.select_by_visible_text('Newest')
             self.logger.info(f"Query sorted by Newest.")
         except Exception as e:
             self.logger.error(f"ERROR sort_by_newest() | Error during selecting option: {e}")
