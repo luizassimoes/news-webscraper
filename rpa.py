@@ -1,5 +1,7 @@
+import os
 import time
 import logging
+import openpyxl
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
@@ -56,14 +58,48 @@ class NewsWebScraper:
             self.logger.error(f"ERROR search() | Could not find element: {e}")
 
     def sort_by_newest(self):
-        wait = WebDriverWait(self.driver, 10)
+        wait = WebDriverWait(self.driver, 50)
         try:
             sort_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.select-input')))
             select = Select(sort_element)
             select.select_by_visible_text('Newest')
+            self.logger.info(f"Query sorted by Newest.")
         except Exception as e:
             self.logger.error(f"ERROR sort_by_newest() | Error during selecting option: {e}")
         
+    def get_element_list(self, element_selector):
+        wait = WebDriverWait(self.driver, 50)
+        try: 
+            elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, element_selector)))
+            return [element.text for element in elements]
+        except Exception as e:
+            self.logger.error(f"ERROR get_element_list(): {element_selector} | Error: {e}")
+
+    def get_news_titles(self):
+        return self.get_element_list('h3.promo-title a')
+
+    def get_news_dates(self):
+        return self.get_element_list('p.promo-timestamp')
+    
+    def get_news_descriptions(self):
+        return self.get_element_list('p.promo-description')
+    
+    def get_news_pic_filenames(self):
+        wait = WebDriverWait(self.driver, 50)
+        try:
+            elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'picture img.image')))
+            return [element.get_attribute('src') for element in elements]
+        except Exception as e:
+            print(f"ERROR get_news_pic_filename() | Error: {e}")
+            return None
+
+    def get_news(self):
+        titles = self.get_news_titles()
+        dates = self.get_news_dates()
+        descriptions = self.get_news_descriptions()
+        pic_filenames = self.get_news_pic_filenames()
+
+        return [titles, dates, descriptions, pic_filenames]
 
     def close_all(self):
         if self.driver:
@@ -86,6 +122,9 @@ def main():
     news_scraper.open_url(url)
     news_scraper.search('Taylor Swift')
     news_scraper.sort_by_newest()
+    
+    news_data = news_scraper.get_news()
+
 
     time.sleep(3)
 
