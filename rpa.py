@@ -115,8 +115,6 @@ class NewsWebScraper:
                 self.logger.error(f'Failed to download {url}: {e}')
         return filenames
 
-
-
     def count_search_query(self, query, titles, descriptions):
         query_count = []
         for i in range(len(titles)):
@@ -148,8 +146,9 @@ class NewsWebScraper:
         descriptions = self.get_news_descriptions()
         dates = self.get_news_dates()
         pic_urls = self.get_news_pic_urls()
+        filenames = self.download_pics(pic_urls)
 
-        return titles, descriptions, dates, pic_urls
+        return titles, descriptions, dates, filenames
 
     def close_all(self):
         if self.driver:
@@ -193,7 +192,7 @@ def main():
     titles, descriptions, dates, pic_urls = news_scraper.get_news()
     # print(titles, descriptions, dates, pic_urls)
     filenames = news_scraper.download_pics(pic_urls)
-    print(filenames)
+    titles, descriptions, dates, filenames = news_scraper.get_news()
     count_query = news_scraper.count_search_query(query, titles, descriptions)
     contains_money = news_scraper.title_contains_money(titles)
 
