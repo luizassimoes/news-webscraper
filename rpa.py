@@ -98,6 +98,24 @@ class NewsWebScraper:
     
     def get_news_pic_urls(self):
         return self.get_element_list('picture img.image', src=True)
+    
+    def download_pics(self, pic_urls):
+        filenames = []
+        for i, url in enumerate(pic_urls):
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                filename = f'image_{i+1}.jpeg'
+                filepath = f'./outputs/{filename}'
+                with open(filepath, 'wb') as file:
+                    file.write(response.content)
+                filenames.append(filename)
+                self.logger.info(f'Downloaded {filename}.')
+            except requests.exceptions.RequestException as e:
+                self.logger.error(f'Failed to download {url}: {e}')
+        return filenames
+
+
 
     def count_search_query(self, query, titles, descriptions):
         query_count = []
@@ -174,11 +192,13 @@ def main():
     
     titles, descriptions, dates, pic_urls = news_scraper.get_news()
     # print(titles, descriptions, dates, pic_urls)
+    filenames = news_scraper.download_pics(pic_urls)
+    print(filenames)
     count_query = news_scraper.count_search_query(query, titles, descriptions)
     contains_money = news_scraper.title_contains_money(titles)
 
-    news_data = [titles, descriptions, dates, pic_filenames, count_query, contains_money]
-
+    news_data = [titles, descriptions, dates, filenames, count_query, contains_money]
+    
     wb = news_scraper.to_excel(news_data)
     wb.save('./outputs/News.xlsx')
 
