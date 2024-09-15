@@ -96,18 +96,6 @@ class NewsWebScraper:
                 self.logger.warning(f'Could not get {get_element} on attempt {attempt+1}. Retrying...')
                 if attempt == retries - 1:
                     self.logger.error(f'ERROR get_element_list(): {get_element} | Error: {e}')
-
-    def get_news_titles(self):
-        return self.get_element_list('h3.promo-title a')
-
-    def get_news_dates(self):
-        return self.get_element_list('p.promo-timestamp')
-    
-    def get_news_descriptions(self):
-        return self.get_element_list('p.promo-description')
-    
-    def get_news_pic_urls(self):
-        return self.get_element_list('picture img.image', src=True)
     
     def download_pics(self, pic_urls):
         filenames = []
@@ -151,10 +139,10 @@ class NewsWebScraper:
         return money_in_query
 
     def get_news(self):
-        titles = self.get_news_titles()
-        descriptions = self.get_news_descriptions()
-        dates = self.get_news_dates()
-        pic_urls = self.get_news_pic_urls()
+        titles = self.get_element_list('h3.promo-title a')
+        descriptions = self.get_element_list('p.promo-description')
+        dates = self.get_element_list('p.promo-timestamp')
+        pic_urls = self.get_element_list('picture img.image', src=True)
         filenames = self.download_pics(pic_urls)
 
         return titles, descriptions, dates, filenames
