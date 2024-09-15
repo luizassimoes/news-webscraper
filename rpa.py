@@ -149,11 +149,21 @@ class NewsWebScraper:
         except Exception as e:
             self.logger.error(f'ERROR next_page() | Could not change pages.')
 
-    def get_news(self):
-        titles = self.get_element_list('h3.promo-title a')
-        descriptions = self.get_element_list('p.promo-description')
-        dates = self.get_element_list('p.promo-timestamp')
-        pic_urls = self.get_element_list('picture img.image', src=True)
+    def parse_date(self, date_str):
+        try:
+            date = parser.parse(date_str)
+            return date
+        except ValueError:
+            self.logger.error(f'ERROR parse_date() | Date "{date_str}" not in format Month Day, Year.')
+
+        match = re.match(r'(\d+)\s+hour[s]?\s+ago', date_str)
+        if match:
+            hours_ago = int(match.group(1))
+            date = datetime.now() - timedelta(hours=hours_ago)
+            return date
+        else:
+            self.logger.error(f'ERROR parse_date() | Date "{date_str}" not in format X hours ago. Could not get date.')
+
         filenames = self.download_pics(pic_urls)
 
         return titles, descriptions, dates, filenames
