@@ -6,6 +6,9 @@ __pycache__/
 # Excel files
 *.xlsx
 
+# JPEG files
+*.jpeg
+
 # C extensions
 *.so
 
