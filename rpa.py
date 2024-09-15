@@ -70,9 +70,11 @@ class NewsWebScraper:
         except Exception as e:
             self.logger.error(f'ERROR sort_by_newest() | Error during selecting option: {e}')
 
-    def select_topic(self, topic): # needs adjustment for See All
+    def select_topic(self, topic):
         wait = WebDriverWait(self.driver, 100)
         try:
+            see_all_btn = wait.until(EC.presence_of_element_located((By.XPATH, '//button[span[@class="see-all-text" and text()="See All"]]')))
+            see_all_btn.click()
             checkbox = wait.until(EC.presence_of_element_located((By.XPATH, f'//label[span[text()="{topic}"]]/input')))
             checkbox.click()
             self.logger.info(f"Selected the topic: {topic}.")
@@ -177,7 +179,7 @@ class NewsWebScraper:
 def main():
     url = 'https://www.latimes.com/'
     query = 'euro'
-    topic = 'Business'
+    topic = 'Books'
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
