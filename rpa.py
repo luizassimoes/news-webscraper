@@ -96,7 +96,7 @@ class NewsWebScraper:
     def get_news_descriptions(self):
         return self.get_element_list('p.promo-description')
     
-    def get_news_pic_filenames(self):
+    def get_news_pic_urls(self):
         return self.get_element_list('picture img.image', src=True)
 
     def count_search_query(self, query, titles, descriptions):
@@ -129,9 +129,9 @@ class NewsWebScraper:
         titles = self.get_news_titles()
         descriptions = self.get_news_descriptions()
         dates = self.get_news_dates()
-        pic_filenames = self.get_news_pic_filenames()
+        pic_urls = self.get_news_pic_urls()
 
-        return titles, descriptions, dates, pic_filenames
+        return titles, descriptions, dates, pic_urls
 
     def close_all(self):
         if self.driver:
@@ -172,8 +172,8 @@ def main():
     news_scraper.search(query)
     news_scraper.sort_by_newest()
     
-    titles, descriptions, dates, pic_filenames = news_scraper.get_news()
-    # print(titles, descriptions, dates, pic_filenames)
+    titles, descriptions, dates, pic_urls = news_scraper.get_news()
+    # print(titles, descriptions, dates, pic_urls)
     count_query = news_scraper.count_search_query(query, titles, descriptions)
     contains_money = news_scraper.title_contains_money(titles)
 
