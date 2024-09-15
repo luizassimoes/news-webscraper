@@ -69,6 +69,16 @@ class NewsWebScraper:
             self.logger.info(f'Query sorted by Newest.')
         except Exception as e:
             self.logger.error(f'ERROR sort_by_newest() | Error during selecting option: {e}')
+
+    def select_topic(self, topic): # needs adjustment for See All
+        wait = WebDriverWait(self.driver, 100)
+        try:
+            checkbox = wait.until(EC.presence_of_element_located((By.XPATH, f'//label[span[text()="{topic}"]]/input')))
+            checkbox.click()
+            self.logger.info(f"Selected the topic: {topic}.")
+        except Exception as e:
+            self.logger.error(f"Error: Couldn't find the topic '{topic}'.")
+            print(e)
         
     def get_element_list(self, element_selector, src=False):
         wait = WebDriverWait(self.driver, 100)
@@ -139,7 +149,6 @@ class NewsWebScraper:
             money_in_query.append(money)
         self.logger.info(f'Contains money analyzed.')
         return money_in_query
-            
 
     def get_news(self):
         titles = self.get_news_titles()
@@ -180,6 +189,7 @@ class NewsWebScraper:
 def main():
     url = 'https://www.latimes.com/'
     query = 'euro'
+    topic = 'Business'
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -188,10 +198,10 @@ def main():
     news_scraper.open_url(url)
     news_scraper.search(query)
     news_scraper.sort_by_newest()
-    
-    titles, descriptions, dates, pic_urls = news_scraper.get_news()
-    # print(titles, descriptions, dates, pic_urls)
-    filenames = news_scraper.download_pics(pic_urls)
+    time.sleep(1)
+    news_scraper.select_topic(topic)
+    time.sleep(1)
+
     titles, descriptions, dates, filenames = news_scraper.get_news()
     count_query = news_scraper.count_search_query(query, titles, descriptions)
     contains_money = news_scraper.title_contains_money(titles)
