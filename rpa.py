@@ -4,6 +4,8 @@ import time
 import logging
 import requests
 from datetime import datetime, timedelta
+from dateutil import parser
+from dateutil.relativedelta import relativedelta
 from openpyxl import Workbook
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -164,6 +166,39 @@ class NewsWebScraper:
         else:
             self.logger.error(f'ERROR parse_date() | Date "{date_str}" not in format X hours ago. Could not get date.')
 
+    def get_news(self, n):
+        out_of_date =  False
+
+        n = 1 if n == 0 else n
+        tomorrow = datetime.now() + timedelta(days=1)
+        n_months_ago = tomorrow - relativedelta(months=n)
+        
+        while True:
+            titles = self.get_element_list('h3.promo-title a')
+            descriptions = self.get_element_list('p.promo-description')
+            dates = self.get_element_list('p.promo-timestamp')
+            pic_urls = self.get_element_list('picture img.image', src=True)
+
+            for i, date_str in enumerate(dates):
+                date_obj = self.parse_date(date_str)
+                print(date_obj)
+
+                if date_obj is not None:
+                    dates[i] = date_obj
+                    if date_obj < n_months_ago:
+                        out_of_date = True
+                        break
+        
+            if out_of_date:
+                break
+            else:
+                self.next_page()     
+
+        titles = titles[0:i].copy()
+        descriptions = descriptions[0:i].copy()
+        dates = dates[0:i].copy()
+        pic_urls = pic_urls[0:i].copy()
+
         filenames = self.download_pics(pic_urls)
 
         return titles, descriptions, dates, filenames
@@ -199,6 +234,7 @@ def main():
     url = 'https://www.latimes.com/'
     query = 'euro'
     topic = 'Books'
+    n_months = 2
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -211,7 +247,7 @@ def main():
     news_scraper.select_topic(topic)
     time.sleep(1)
 
-    titles, descriptions, dates, filenames = news_scraper.get_news()
+    titles, descriptions, dates, filenames = news_scraper.get_news(n_months)
     count_query = news_scraper.count_search_query(query, titles, descriptions)
     contains_money = news_scraper.title_contains_money(titles)
 
@@ -219,8 +255,6 @@ def main():
     
     wb = news_scraper.to_excel(news_data)
     wb.save('./outputs/News.xlsx')
-
-    news_scraper.next_page()
 
     time.sleep(3)
 
