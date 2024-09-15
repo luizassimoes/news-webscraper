@@ -3,6 +3,7 @@ import re
 import time
 import logging
 import requests
+from datetime import datetime, timedelta
 from openpyxl import Workbook
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -79,8 +80,7 @@ class NewsWebScraper:
             checkbox.click()
             self.logger.info(f"Selected the topic: {topic}.")
         except Exception as e:
-            self.logger.error(f"Error: Couldn't find the topic '{topic}'.")
-            print(e)
+            self.logger.error(f"ERROR select_topic() | Could not find the topic: '{topic}'.")
         
     def get_element_list(self, element_selector, src=False):
         wait = WebDriverWait(self.driver, 100)
@@ -139,6 +139,15 @@ class NewsWebScraper:
             money_in_query.append(money)
         self.logger.info(f'Contains money analyzed.')
         return money_in_query
+
+    def next_page(self):
+        wait = WebDriverWait(self.driver, 100)
+        try:
+            next_btn = wait.until(EC.presence_of_element_located((By.XPATH, '//a[span[text()="Next"]]')))
+            next_btn.click()
+            self.logger.info(f"Next page.")
+        except Exception as e:
+            self.logger.error(f'ERROR next_page() | Could not change pages.')
 
     def get_news(self):
         titles = self.get_element_list('h3.promo-title a')
@@ -201,6 +210,7 @@ def main():
     wb = news_scraper.to_excel(news_data)
     wb.save('./outputs/News.xlsx')
 
+    news_scraper.next_page()
 
     time.sleep(3)
 
