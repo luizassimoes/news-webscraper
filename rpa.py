@@ -64,7 +64,7 @@ class NewsWebScraper:
     def sort_by_newest(self):
         wait = WebDriverWait(self.driver, 100)
         try:
-            retries = 2
+            retries = 3
             for _ in range(retries):
                 sort_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.select-input')))
                 select = Select(sort_element)
@@ -148,6 +148,7 @@ class NewsWebScraper:
             next_btn = wait.until(EC.presence_of_element_located((By.XPATH, '//a[span[text()="Next"]]')))
             next_btn.click()
             self.logger.info(f"Next page.")
+            time.sleep(2)
         except Exception as e:
             self.logger.error(f'ERROR next_page() | Could not change pages.')
 
