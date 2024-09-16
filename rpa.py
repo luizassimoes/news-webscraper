@@ -62,16 +62,10 @@ class NewsWebScraper:
             self.logger.error(f'ERROR search() | Could not find element: {e}')
 
     def sort_by_newest(self):
-        wait = WebDriverWait(self.driver, 100)
-        try:
-            retries = 3
-            for _ in range(retries):
-                sort_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.select-input')))
-                select = Select(sort_element)
-                select.select_by_visible_text('Newest')
-            self.logger.info(f'Query sorted by Newest.')
-        except Exception as e:
-            self.logger.error(f'ERROR sort_by_newest() | Error during selecting option: {e}')
+        current_url = self.driver.current_url
+        next_url = current_url + '&s=1'
+        self.logger.info(f'Query sorted by Newest.')    
+        self.open_url(next_url)
 
     def select_topic(self, topic):
         wait = WebDriverWait(self.driver, 10)
