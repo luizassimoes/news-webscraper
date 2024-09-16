@@ -137,14 +137,13 @@ class NewsWebScraper:
         return money_in_query
 
     def next_page(self):
-        wait = WebDriverWait(self.driver, 100)
-        try:
-            next_btn = wait.until(EC.presence_of_element_located((By.XPATH, '//a[span[text()="Next"]]')))
-            next_btn.click()
-            self.logger.info(f"Next page.")
-            time.sleep(2)
-        except Exception as e:
-            self.logger.error(f'ERROR next_page() | Could not change pages.')
+        current_url = self.driver.current_url
+        if current_url[-3:].startswith('p='):
+            next_url = current_url[:-1] + str(int(current_url[-1])+1)
+        else:
+            next_url = current_url + '&p=2'
+        self.logger.info(f"Next page.")
+        self.open_url(next_url)
 
     def parse_date(self, date_str):
         try:
