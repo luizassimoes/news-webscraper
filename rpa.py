@@ -81,19 +81,19 @@ class NewsWebScraper:
     def get_element_list(self, element_selector, src=False):
         wait = WebDriverWait(self.driver, 10)
         retries = 3
-        get_element = element_selector.split('-')[-1].split(' ')[0].title()
+        element_name = element_selector.split('-')[-1].split(' ')[0].title()
         for attempt in range(retries):
             try: 
                 elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, element_selector)))
-                self.logger.info(f'{get_element}s gotten on attempt {attempt+1}.')
+                self.logger.info(f'{element_name}s gotten on attempt {attempt+1}.')
                 if not src:
                     return [element.text for element in elements]
                 else:
                     return [element.get_attribute('src') for element in elements]
             except Exception as e:
-                self.logger.warning(f'Could not get {get_element} on attempt {attempt+1}. Retrying...')
+                self.logger.warning(f'Could not get {element_name} on attempt {attempt+1}. Retrying...')
                 if attempt == retries - 1:
-                    self.logger.error(f'ERROR get_element_list(): {get_element} | Error: {e}')
+                    self.logger.error(f'ERROR get_element_list(): {element_name} | Error: {e}')
     
     def download_pics(self, pic_urls):
         filenames = []
