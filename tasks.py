@@ -12,6 +12,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from RPA.core.webdriver import start
+from RPA.Robocorp.WorkItems import WorkItems
+
+workitem = WorkItems()
 
 
 class NewsWebScraper:
@@ -250,11 +253,17 @@ class NewsWebScraper:
 
 def main():
     url = 'https://www.latimes.com/'
-    query = 'euro'
-    topic = 'Television'
-    n_months = 1
 
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    workitem.get_input_work_item()
+    query = workitem.get("QUERY", default='')
+    topic = workitem.get("TOPIC", default='Television')
+    n_months = workitem.get("MONTHS", default=1)
+
+    # query = 'euro'
+    # topic = 'Television'
+    # n_months = 1
+
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', filename='rpa.log')
 
     news_scraper = NewsWebScraper()
     news_scraper.set_webdriver()
@@ -275,8 +284,6 @@ def main():
     
     wb = news_scraper.to_excel(news_data)
     wb.save('./outputs/News.xlsx')
-
-    time.sleep(3)
 
     news_scraper.close_all()
 
