@@ -188,7 +188,6 @@ class NewsWebScraper:
 
                 aux_dates[i] = date_obj
                 if date_obj < n_months_ago:
-                    print('index out of date: ', i)
                     out_of_date = True
                     break
         
@@ -239,8 +238,8 @@ class NewsWebScraper:
 def main():
     url = 'https://www.latimes.com/'
     query = 'euro'
-    topic = 'Soccer'
-    n_months = 3
+    topic = 'Television'
+    n_months = 1
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
