@@ -98,15 +98,22 @@ class NewsWebScraper:
         filenames = []
         for i, url in enumerate(pic_urls):
             try:
-                response = requests.get(url)
-                response.raise_for_status()
+                self.driver.get(url)
+                time.sleep(1)
                 filename = f'image_{i+1}.jpeg'
-                filepath = f'./outputs/{filename}'
-                with open(filepath, 'wb') as file:
-                    file.write(response.content)
+
+                script = f"""
+                var link = document.createElement('a'); 
+                link.href = '{url}'; 
+                link.download = '{filename}'; 
+                link.click();
+                """
+                self.driver.execute_script(script)
+                
+                time.sleep(1)
                 filenames.append(filename)
                 self.logger.info(f'Downloaded {filename}.')
-            except requests.exceptions.RequestException as e:
+            except Exception as e:
                 self.logger.error(f'Failed to download {url}: {e}')
         return filenames
 
