@@ -148,7 +148,7 @@ class NewsWebScraper:
 
     def parse_date(self, date_str):
         try:
-            date = parser.parse(date_str)
+            date = parser.parse(str(date_str))
             return date
         except ValueError:
             self.logger.error(f'ERROR parse_date() | Date "{date_str}" not in format Month Day, Year.')
