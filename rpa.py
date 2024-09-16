@@ -1,7 +1,6 @@
 import re
 import time
 import logging
-import requests
 from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
