@@ -1,4 +1,3 @@
-import os
 import re
 import time
 import logging
@@ -9,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from openpyxl import Workbook
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select, WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from RPA.core.webdriver import start
 
