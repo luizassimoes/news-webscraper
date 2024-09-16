@@ -74,7 +74,7 @@ class NewsWebScraper:
             self.logger.error(f'ERROR sort_by_newest() | Error during selecting option: {e}')
 
     def select_topic(self, topic):
-        wait = WebDriverWait(self.driver, 100)
+        wait = WebDriverWait(self.driver, 10)
         try:
             see_all_btn = wait.until(EC.presence_of_element_located((By.XPATH, '//button[span[@class="see-all-text" and text()="See All"]]')))
             see_all_btn.click()
@@ -85,7 +85,7 @@ class NewsWebScraper:
             self.logger.error(f"ERROR select_topic() | Could not find the topic: '{topic}'.")
         
     def get_element_list(self, element_selector, src=False):
-        wait = WebDriverWait(self.driver, 100)
+        wait = WebDriverWait(self.driver, 10)
         retries = 3
         get_element = element_selector.split('-')[-1].split(' ')[0].title()
         for attempt in range(retries):
