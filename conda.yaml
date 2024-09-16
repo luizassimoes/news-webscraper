@@ -1,0 +1,8 @@
+channels:
+  - defaults
+dependencies:
+  - python=3.11.8  # Specify your Python version
+  - pip
+  - pip:
+      - rpaframework  # The RPA Framework for Robocorp tasks
+      - python-dateutil  # For handling date and time parsing

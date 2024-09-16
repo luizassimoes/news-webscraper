@@ -1,0 +1,3 @@
+tasks:
+  Run Selenium Task:
+    shell: python3 -m tasks
