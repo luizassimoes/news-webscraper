@@ -161,6 +161,10 @@ class NewsWebScraper:
             self.logger.error(f'ERROR parse_date() | Date "{date_str}" not in format X hours ago. Could not get date.')
 
     def get_news(self, n):
+        titles = []
+        descriptions = []
+        dates = []
+        pic_urls = []
         out_of_date =  False
 
         n = 1 if n == 0 else n
@@ -168,30 +172,32 @@ class NewsWebScraper:
         n_months_ago = tomorrow - relativedelta(months=n)
         
         while True:
-            titles = self.get_element_list('h3.promo-title a')
-            descriptions = self.get_element_list('p.promo-description')
-            dates = self.get_element_list('p.promo-timestamp')
-            pic_urls = self.get_element_list('picture img.image', src=True)
+            aux_titles = self.get_element_list('h3.promo-title a')
+            aux_descriptions = self.get_element_list('p.promo-description')
+            aux_dates = self.get_element_list('p.promo-timestamp')
+            aux_pic_urls = self.get_element_list('picture img.image', src=True)
 
-            for i, date_str in enumerate(dates):
+            for i, date_str in enumerate(aux_dates):
                 date_obj = self.parse_date(date_str)
-                print(date_obj)
 
-                if date_obj is not None:
-                    dates[i] = date_obj
-                    if date_obj < n_months_ago:
-                        out_of_date = True
-                        break
+                aux_dates[i] = date_obj
+                if date_obj < n_months_ago:
+                    print('index out of date: ', i)
+                    out_of_date = True
+                    break
         
             if out_of_date:
+                titles.extend(aux_titles[:i].copy())
+                descriptions.extend(aux_descriptions[:i].copy())
+                dates.extend(aux_dates[:i].copy())
+                pic_urls.extend(aux_pic_urls[:i].copy())
                 break
             else:
+                titles.extend(aux_titles.copy())
+                descriptions.extend(aux_descriptions.copy())
+                dates.extend(aux_dates.copy())
+                pic_urls.extend(aux_pic_urls.copy())
                 self.next_page()     
-
-        titles = titles[0:i].copy()
-        descriptions = descriptions[0:i].copy()
-        dates = dates[0:i].copy()
-        pic_urls = pic_urls[0:i].copy()
 
         filenames = self.download_pics(pic_urls)
 
@@ -227,8 +233,8 @@ class NewsWebScraper:
 def main():
     url = 'https://www.latimes.com/'
     query = 'euro'
-    topic = 'Books'
-    n_months = 2
+    topic = 'Soccer'
+    n_months = 3
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
