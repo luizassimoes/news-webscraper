@@ -217,11 +217,11 @@ class NewsWebScraper:
 
     def move_files(self, n_images):
         try:
-            outputs_directory = os.path.join(os.path.abspath("./outputs"))
+            outputs_directory = os.path.join(os.path.abspath("./output"))
             for n in range(n_images):
                 downloaded_file = os.path.join(os.path.join(os.getenv('USERPROFILE'), 'Downloads'), f"image_{n+1}.jpeg")
                 shutil.move(downloaded_file, outputs_directory)
-            self.logger.info('Files moved to the outputs folder.')
+            self.logger.info('Files moved to the output folder.')
         except Exception as e:
             self.logger.error(f'ERROR move_files() | Could not move files due to: \n{e}.')
 
@@ -239,7 +239,7 @@ class NewsWebScraper:
         wb = Workbook()
         sheet = wb.active
 
-        headers = ['Title', 'Description', 'Date', 'Filename', 'Count Query in Title', 'Contains Money in Title']
+        headers = ['Title', 'Description', 'Date', 'Filename', 'Count Query in Title and Description', 'Contains Money in Title']
         for i_col, header in enumerate(headers):
             sheet.cell(row=1, column=i_col+1).value = header
 
@@ -261,7 +261,7 @@ def main():
     # n_months = workitem.get("MONTHS", default=1)
 
     query = 'euro'
-    topic = 'Business'
+    topic = 'Television'
     n_months = 1
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') #, filename='rpa.log')
@@ -283,7 +283,7 @@ def main():
     news_data = [titles, descriptions, dates, filenames, count_query, contains_money]
     
     wb = news_scraper.to_excel(news_data)
-    wb.save('./outputs/News.xlsx')
+    wb.save('./output/News.xlsx')
 
     news_scraper.close_all()
 
