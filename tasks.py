@@ -256,18 +256,18 @@ def main():
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') #, filename='rpa.log')
 
-    # work_items = WorkItems()
-    # work_items.get_input_work_item()
-    # query = work_items.get_work_item_variable("QUERY", default='teste')
-    # topic = work_items.get_work_item_variable("TOPIC", default='Business')
-    # n_months = work_items.get_work_item_variable("MONTHS", default=0)
-    # print(query)
-    # print(topic)
-    # print(n_months) 
+    work_items = WorkItems()
+    work_items.get_input_work_item()
+    query = work_items.get_work_item_variable("QUERY", default='teste')
+    topic = work_items.get_work_item_variable("TOPIC", default='Business')
+    n_months = work_items.get_work_item_variable("MONTHS", default=0)
+    print(query)
+    print(topic)
+    print(n_months) 
 
-    query = 'euro'
-    topic = 'Television'
-    n_months = 1
+    # query = 'euro'
+    # topic = 'Television'
+    # n_months = 1
 
     news_scraper = NewsWebScraper()
     news_scraper.set_webdriver()
