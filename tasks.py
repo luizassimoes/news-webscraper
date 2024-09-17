@@ -178,9 +178,14 @@ class NewsWebScraper:
         pic_urls = []
         out_of_date =  False
 
-        n = 1 if n == 0 else abs(n)
+        try: 
+            n = int(n)
+        except:
+            self.logger.warning(f'The variable MONTHS has to be a number, not {n}. Using 1 month instead.')
+
         if n < 0:
             self.logger.warning(f'The number of months can not be negative: {n}. Using {abs(n)} instead.')
+        n = 1 if n == 0 else abs(n)
 
         tomorrow = datetime.now() + timedelta(days=1)
         n_months_ago = tomorrow - relativedelta(months=n)
