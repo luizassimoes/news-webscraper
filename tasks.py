@@ -14,7 +14,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from RPA.core.webdriver import start
 from RPA.Robocorp.WorkItems import WorkItems
 
-from topics_dict import topics_dict
+from topics_dict import topics_dict  # Contains the URL code for each Topic: invoked within the select_topic()
 
 
 class NewsWebScraper:
@@ -55,6 +55,7 @@ class NewsWebScraper:
             self.logger.error('ERR0R open_url() | WebDriver not initialized. You must call set_webdriver() first.')
 
     def search(self, url: str, search_query: str):
+        """Perform a search on the given URL using the provided query string."""
         try:
             search_url = url + 'search?q=' + urllib.parse.quote(search_query)
             self.logger.info(f'Search query submitted: {search_query}.')
@@ -64,22 +65,22 @@ class NewsWebScraper:
 
     def sort_by_newest(self):
         current_url = self.driver.current_url
-        next_url = current_url + '&s=1'
+        next_url = current_url + '&s=1'  # Parameter to sort by Newest: s=1
         self.logger.info(f'Query sorted by Newest.')    
         self.open_url(next_url)
 
     def select_topic(self, topic):
         current_url = self.driver.current_url
         url_0, url_1 = current_url.rsplit('&', 1)
-        url_topic = url_0 + '&' + topics_dict[topic] + '&' + url_1
+        url_topic = url_0 + '&' + topics_dict[topic] + '&' + url_1  # Topic goes between search and sort by
         self.logger.info(f"Selected topic: {topic}.")
         self.open_url(url_topic)
         
     def get_element_list(self, element_selector, src=False):
         wait = WebDriverWait(self.driver, 10)
         retries = 3
-        element_name = element_selector.split('-')[-1].split(' ')[0].title()
-        for attempt in range(retries):
+        element_name = element_selector.split('-')[-1].split(' ')[0].title()  # Gets the element name to show in the log
+        for attempt in range(retries):  # Implement retries in case the page takes long to load
             try: 
                 elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, element_selector)))
                 self.logger.info(f'{element_name}s gotten on attempt {attempt+1}.')
@@ -136,11 +137,12 @@ class NewsWebScraper:
         return money_in_query
 
     def next_page(self):
+        """Uses the 'p' element to navagate through pages via the URL."""
         current_url = self.driver.current_url
-        url_preffix, url_suffix = current_url.rsplit('&', 1)
+        url_preffix, url_suffix = current_url.rsplit('&', 1)  # The 'p' element is always the last one in the URL
         if url_suffix.startswith('p='):
             next_url = url_preffix + '&p=' +  str(int(url_suffix.rsplit('=', 1)[-1])+1)
-        else:
+        else:  # No 'p' element in the URL means the current page is page 1
             next_url = current_url + '&p=2'
         self.logger.info(f"Next page.")
         self.open_url(next_url)
@@ -152,8 +154,8 @@ class NewsWebScraper:
         except ValueError:
             self.logger.warning(f'Date "{date_str}" not in format Month Day, Year. Trying another format...')
 
-        match_hour = re.match(r'(\d+)\s+hour[s]?\s+ago', str(date_str))
-        match_minute = re.match(r'(\d+)\s+minute[s]?\s+ago', str(date_str))
+        match_hour = re.match(r'(\d+)\s+hour[s]?\s+ago', str(date_str))      # Pattern for X hours ago
+        match_minute = re.match(r'(\d+)\s+minute[s]?\s+ago', str(date_str))  # Pattern for X minutes ago
         if match_hour:
             hours_ago = int(match_hour.group(1))
             date = datetime.now() - timedelta(hours=hours_ago)
@@ -190,13 +192,13 @@ class NewsWebScraper:
                     out_of_date = True
                     break
         
-            if out_of_date:
+            if out_of_date:  # Gets only the list items that are in the specified period 
                 titles.extend(aux_titles[:i].copy())
                 descriptions.extend(aux_descriptions[:i].copy())
                 dates.extend(aux_dates[:i].copy())
                 pic_urls.extend(aux_pic_urls[:i].copy())
                 break
-            else:
+            else:  # Gets the news from the current page and goes to the next page
                 titles.extend(aux_titles.copy())
                 descriptions.extend(aux_descriptions.copy())
                 dates.extend(aux_dates.copy())
@@ -234,7 +236,7 @@ class NewsWebScraper:
                     cell_content = sheet.cell(row=i_row+2, column=i_col+1)
                     cell_content.value = val
                     sheet.row_dimensions[i_row+2].height = 60
-                    if i_col > 1:
+                    if i_col > 1:  # Horizontal aligment not for columns Title and Description
                         cell_content.alignment = Alignment(horizontal='center', vertical='center')
                     else:
                         cell_content.alignment = Alignment(vertical='center', wrap_text=True)
@@ -251,13 +253,14 @@ class NewsWebScraper:
         self.logger.info('Excel done.')
         return wb
 
+
 def main():
     url = 'https://www.latimes.com/'
 
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') #, filename='rpa.log')
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
     work_items = WorkItems()
-    work_items.get_input_work_item()
+    work_items.get_input_work_item()  # Gets the variables from the Robocloud Workspace
     query = work_items.get_work_item_variable("SEARCH_QUERY", default='teste')
     topic = work_items.get_work_item_variable("TOPIC", default='Business')
     n_months = work_items.get_work_item_variable("MONTHS", default=0)
