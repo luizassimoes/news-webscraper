@@ -162,9 +162,9 @@ class NewsWebScraper:
             date = parser.parse(str(date_str))
             return date
         except ValueError:
-            self.logger.error(f'ERROR parse_date() | Date "{date_str}" not in format Month Day, Year.')
+            self.logger.info(f'Date "{date_str}" not in format Month Day, Year. Trying another format...')
 
-        match = re.match(r'(\d+)\s+hour[s]?\s+ago', date_str)
+        match = re.match(r'(\d+)\s+hour[s]?\s+ago', str(date_str))
         if match:
             hours_ago = int(match.group(1))
             date = datetime.now() - timedelta(hours=hours_ago)
