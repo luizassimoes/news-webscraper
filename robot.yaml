@@ -2,4 +2,11 @@ tasks:
   Run Selenium Task:
     shell: python3 -m tasks
 
-artifactsDir: artifacts
+condaConfigFile: conda.yaml
+artifactsDir: output
+PATH:
+  - .
+PYTHONPATH:
+  - .
+ignoreFiles:
+  - .gitignore
