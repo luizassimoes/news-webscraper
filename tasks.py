@@ -79,7 +79,13 @@ class NewsWebScraper:
         else:
             self.logger.error(f'ERROR select_topic() | The topic {topic} does not exist. No topic selected.')
         
-    def get_element_list(self, element_selector, src=False):  # src parameter gets img tags differently from text
+    def get_element_list(self, element_selector, src=False):
+        """
+        Gets the elements from the web page. 
+        The src parameter allows the function to treat img tags. This part gets all the news displayed,
+        and checks if they have an image tag associated to it. If not, it registers None so the order of
+        the filenames are correctly organized according to the news in the final Excel file.        
+        """
         wait = WebDriverWait(self.driver, 10)
         retries = 2
         element_name = element_selector.split('-')[-1].split(' ')[0].title()  # Gets the element name to show in the log
@@ -95,9 +101,9 @@ class NewsWebScraper:
                     news_cards = self.driver.find_elements(By.CLASS_NAME, 'promo-wrapper')
                     for card in news_cards:
                         has_image = card.find_elements(By.TAG_NAME, "img")
-                        if has_image:
+                        if has_image:  # Handles news that do not have an image associated to it 
                             src_list.append(elements[src_index].get_attribute('src'))
-                            src_index += 1
+                            src_index += 1 
                         else:
                             src_list.append(None)
                     self.logger.info(f'{element_name}s gotten on attempt {attempt+1}.')
