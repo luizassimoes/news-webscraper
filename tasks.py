@@ -150,7 +150,7 @@ class NewsWebScraper:
             date = parser.parse(str(date_str))
             return date
         except ValueError:
-            self.logger.info(f'Date "{date_str}" not in format Month Day, Year. Trying another format...')
+            self.logger.warning(f'Date "{date_str}" not in format Month Day, Year. Trying another format...')
 
         match_hour = re.match(r'(\d+)\s+hour[s]?\s+ago', str(date_str))
         match_minute = re.match(r'(\d+)\s+minute[s]?\s+ago', str(date_str))
@@ -267,7 +267,7 @@ def main():
     # topic = 'Television'
     # n_months = 1
 
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') #, filename='rpa.log')
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s') #, filename='rpa.log')
 
     news_scraper = NewsWebScraper()
     news_scraper.set_webdriver()
