@@ -94,7 +94,7 @@ class NewsWebScraper:
             except Exception as e:
                 self.logger.warning(f'Could not get {element_name} on attempt {attempt+1}. Retrying...')
                 if attempt == retries - 1:
-                    self.logger.error(f'ERROR get_element_list(): {element_name} | Element not found.')
+                    self.logger.warning(f'Element not found: {element_name}.')
     
     def download_pics(self, pic_urls):
         filenames = []
@@ -284,6 +284,10 @@ def main():
     query = work_items.get_work_item_variable("SEARCH_QUERY", default='teste')
     topic = work_items.get_work_item_variable("TOPIC", default='Business')
     n_months = work_items.get_work_item_variable("MONTHS", default=0)
+
+    query = 'heart'
+    topic = 'ADVISORS'
+    n_months = 48
 
     news_scraper = NewsWebScraper()
     news_scraper.logger.info('-'*60)
