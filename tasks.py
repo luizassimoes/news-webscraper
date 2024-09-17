@@ -191,12 +191,12 @@ class NewsWebScraper:
         
         while True:
             aux_titles = self.get_element_list('h3.promo-title a')
+            if aux_titles is None:
+                break
+
             aux_descriptions = self.get_element_list('p.promo-description')
             aux_dates = self.get_element_list('p.promo-timestamp')
             aux_pic_urls = self.get_element_list('picture img.image', src=True)
-
-            if aux_titles is None:
-                break
 
             for i, date_str in enumerate(aux_dates):
                 date_obj = self.parse_date(date_str)
