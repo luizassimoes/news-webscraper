@@ -4,9 +4,8 @@ channels:
 dependencies:
   - python=3.11.8 
   - pip
-  - pip:
-      - rpaframework==28.6.2
-      - openpyxl==3.1.5
-      - selenium==4.15.2
-      - python-dateutil
+  - rpaframework==28.6.2
+  - openpyxl==3.1.5
+  - selenium==4.15.2
+  - python-dateutil
 
