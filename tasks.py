@@ -164,10 +164,15 @@ class NewsWebScraper:
         except ValueError:
             self.logger.info(f'Date "{date_str}" not in format Month Day, Year. Trying another format...')
 
-        match = re.match(r'(\d+)\s+hour[s]?\s+ago', str(date_str))
-        if match:
-            hours_ago = int(match.group(1))
+        match_hour = re.match(r'(\d+)\s+hour[s]?\s+ago', str(date_str))
+        match_minute = re.match(r'(\d+)\s+minute[s]?\s+ago', str(date_str))
+        if match_hour:
+            hours_ago = int(match_hour.group(1))
             date = datetime.now() - timedelta(hours=hours_ago)
+            return date
+        elif match_minute:
+            minutes_ago = int(match_minute.group(1))
+            date = datetime.now() - timedelta(minutes=minutes_ago)
             return date
         else:
             self.logger.error(f'ERROR parse_date() | Date "{date_str}" not in format X hours ago. Could not get date.')
