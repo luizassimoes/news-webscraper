@@ -1,5 +1,5 @@
 tasks:
   Run Selenium Task:
-    shell: conda install --file conda.yaml && python3 -m tasks
+    shell: python3 -m tasks
 
 artifactsDir: artifacts
