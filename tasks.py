@@ -12,11 +12,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from RPA.core.webdriver import start
-# from RPA.Robocorp.WorkItems import WorkItems
+from RPA.Robocorp.WorkItems import WorkItems
 
 from topics_dict import topics_dict
-
-# workitem = WorkItems()
 
 
 class NewsWebScraper:
@@ -100,11 +98,11 @@ class NewsWebScraper:
             try:
                 self.driver.get(url)
                 width = 840
-                height = 600
+                height = 560
                 self.driver.set_window_size(width, height)
 
-                filename = f'image_{i+1}'
-                self.driver.save_screenshot(f'./output/{filename}.png')
+                filename = f'image_{i+1}.png'
+                self.driver.save_screenshot(f'./output/{filename}')
                 self.logger.info(f'Downloaded {filename}.')
                 filenames.append(filename)
             except Exception as e:
@@ -256,14 +254,18 @@ class NewsWebScraper:
 def main():
     url = 'https://www.latimes.com/'
 
-    # workitem.get_input_work_item()
-    # query = workitem.get("QUERY", default='')
-    # topic = workitem.get("TOPIC", default='Television')
-    # n_months = workitem.get("MONTHS", default=1)
+    work_items = WorkItems()
+    work_items.load_work_item()
+    query = work_items.get_work_item_variable("QUERY", default='teste')
+    topic = work_items.get_work_item_variable("TOPIC", default='Business')
+    n_months = work_items.get_work_item_variable("MONTHS", default=0)
+    print(query)
+    print(topic)
+    print(n_months)
 
-    query = 'euro'
-    topic = 'Television'
-    n_months = 1
+    # query = 'euro'
+    # topic = 'Television'
+    # n_months = 1
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') #, filename='rpa.log')
 
