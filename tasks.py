@@ -57,7 +57,7 @@ class NewsWebScraper:
     def search(self, url: str, search_query: str):
         try:
             search_url = url + 'search?q=' + urllib.parse.quote(search_query)
-            self.logger.info(f'Search query submitted.')
+            self.logger.info(f'Search query submitted: {search_query}.')
             self.open_url(search_url)
         except Exception as e:
             self.logger.error(f'ERROR search() | Could not find element: {e}')
@@ -258,16 +258,9 @@ def main():
 
     work_items = WorkItems()
     work_items.get_input_work_item()
-    query = work_items.get_work_item_variable("QUERY", default='teste')
+    query = work_items.get_work_item_variable("SEARCH_QUERY", default='teste')
     topic = work_items.get_work_item_variable("TOPIC", default='Business')
     n_months = work_items.get_work_item_variable("MONTHS", default=0)
-    print(query)
-    print(topic)
-    print(n_months) 
-
-    # query = 'euro'
-    # topic = 'Television'
-    # n_months = 1
 
     news_scraper = NewsWebScraper()
     news_scraper.set_webdriver()
