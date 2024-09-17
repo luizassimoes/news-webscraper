@@ -263,6 +263,9 @@ def main():
     n_months = work_items.get_work_item_variable("MONTHS", default=0)
 
     news_scraper = NewsWebScraper()
+    news_scraper.logger.info('-'*60)
+    news_scraper.logger.info('Variables imported. Process is starting.')
+
     news_scraper.set_webdriver()
     news_scraper.search(url, query)
     news_scraper.sort_by_newest()
@@ -280,6 +283,8 @@ def main():
     wb.save('./output/News.xlsx')
 
     news_scraper.close_all()
+
+    news_scraper.logger.info('-'*60)
 
 
 if __name__ == '__main__':
