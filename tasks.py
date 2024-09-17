@@ -100,7 +100,7 @@ class NewsWebScraper:
             try:
                 self.driver.get(url)
                 width = 840
-                height = 640
+                height = 600
                 self.driver.set_window_size(width, height)
 
                 filename = f'image_{i+1}'
