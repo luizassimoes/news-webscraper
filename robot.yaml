@@ -1,5 +1,5 @@
 tasks:
-  Run News Web Scraper:
+  Run Selenium Task:
     shell: python3 -m tasks
 
 artifactsDir: artifacts
