@@ -181,6 +181,7 @@ class NewsWebScraper:
         try: 
             n = int(n)
         except:
+            n = 1
             self.logger.warning(f'The variable MONTHS has to be a number, not {n}. Using 1 month instead.')
 
         if n < 0:
