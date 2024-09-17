@@ -1,7 +1,6 @@
 import os
 import re
 import time
-import shutil
 import logging
 import urllib.parse
 from datetime import datetime, timedelta
@@ -210,15 +209,6 @@ class NewsWebScraper:
 
         return titles, descriptions, dates, filenames
 
-    def move_files(self, n_images):
-        try:
-            outputs_directory = os.path.join(os.path.abspath("./output"))
-            for n in range(n_images):
-                downloaded_file = os.path.join(os.path.join(os.getenv('USERPROFILE'), 'Downloads'), f"image_{n+1}.jpeg")
-                shutil.move(downloaded_file, outputs_directory)
-            self.logger.info('Files moved to the output folder.')
-        except Exception as e:
-            self.logger.error(f'ERROR move_files() | Could not move files due to: \n{e}.')
 
     def close_all(self):
         if self.driver:
@@ -272,8 +262,6 @@ def main():
     titles, descriptions, dates, filenames = news_scraper.get_news(n_months)
     count_query = news_scraper.count_search_query(query, titles, descriptions)
     contains_money = news_scraper.title_contains_money(titles)
-
-    news_scraper.move_files(len(filenames))
 
     news_data = [titles, descriptions, dates, filenames, count_query, contains_money]
     
