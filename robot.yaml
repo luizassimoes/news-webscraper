@@ -1,3 +1,5 @@
 tasks:
   Run News Web Scraper:
     shell: python3 -m tasks
+
+artifactsDir: artifacts
