@@ -4,17 +4,17 @@ import time
 import shutil
 import logging
 from datetime import datetime, timedelta
+from dateutil import parser
+from dateutil.relativedelta import relativedelta
 from openpyxl import Workbook
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from RPA.core.webdriver import start
-from RPA.Robocorp.WorkItems import WorkItems
-from dateutil import parser
-from dateutil.relativedelta import relativedelta
+# from RPA.Robocorp.WorkItems import WorkItems
 
-workitem = WorkItems()
+# workitem = WorkItems()
 
 
 class NewsWebScraper:
@@ -254,14 +254,14 @@ class NewsWebScraper:
 def main():
     url = 'https://www.latimes.com/'
 
-    workitem.get_input_work_item()
-    query = workitem.get("QUERY", default='')
-    topic = workitem.get("TOPIC", default='Television')
-    n_months = workitem.get("MONTHS", default=1)
+    # workitem.get_input_work_item()
+    # query = workitem.get("QUERY", default='')
+    # topic = workitem.get("TOPIC", default='Television')
+    # n_months = workitem.get("MONTHS", default=1)
 
-    # query = 'euro'
-    # topic = 'Television'
-    # n_months = 1
+    query = 'euro'
+    topic = 'Television'
+    n_months = 1
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') #, filename='rpa.log')
 
