@@ -78,7 +78,6 @@ class NewsWebScraper:
             self.open_url(url_topic)
         else:
             self.logger.error(f'ERROR select_topic() | The topic {topic} does not exist. No topic selected.')
-
         
     def get_element_list(self, element_selector, src=False):
         wait = WebDriverWait(self.driver, 10)
@@ -181,8 +180,8 @@ class NewsWebScraper:
         try: 
             n = int(n)
         except:
-            n = 1
             self.logger.warning(f'The variable MONTHS has to be a number, not {n}. Using 1 month instead.')
+            n = 1
 
         if n < 0:
             self.logger.warning(f'The number of months can not be negative: {n}. Using {abs(n)} instead.')
