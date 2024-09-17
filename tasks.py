@@ -263,7 +263,7 @@ def main():
     # topic = 'Television'
     # n_months = 1
 
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', filename='rpa.log')
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') #, filename='rpa.log')
 
     news_scraper = NewsWebScraper()
     news_scraper.set_webdriver()
