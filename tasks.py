@@ -3,6 +3,7 @@ import re
 import time
 import shutil
 import logging
+import urllib.parse
 from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
@@ -54,15 +55,11 @@ class NewsWebScraper:
         else:
             self.logger.error('ERR0R open_url() | WebDriver not initialized. You must call set_webdriver() first.')
 
-    def search(self, search_query: str):
+    def search(self, url: str, search_query: str):
         try:
-            search_button = self.driver.find_element(By.XPATH, '/html/body/ps-header/header/div[2]/button')
-            search_button.click()
-            self.logger.info(f'Search button clicked.')
-            search_field = self.driver.find_element(By.XPATH, '/html/body/ps-header/header/div[2]/div[2]/form/label/input')
-            search_field.send_keys(search_query)
-            search_field.submit()
+            search_url = url + 'search?q=' + urllib.parse.quote(search_query)
             self.logger.info(f'Search query submitted.')
+            self.open_url(search_url)
         except Exception as e:
             self.logger.error(f'ERROR search() | Could not find element: {e}')
 
@@ -273,8 +270,7 @@ def main():
 
     news_scraper = NewsWebScraper()
     news_scraper.set_webdriver()
-    news_scraper.open_url(url)
-    news_scraper.search(query)
+    news_scraper.search(url, query)
     news_scraper.sort_by_newest()
     time.sleep(1)
     news_scraper.select_topic(topic)
