@@ -207,7 +207,7 @@ class NewsWebScraper:
         except:
             n_months_ago = tomorrow - relativedelta(months=1)
             invalid_year = tomorrow.year - int(n/12)
-            self.logger.warning(f'Year {invalid_year} is out of range.')
+            self.logger.warning(f'Year {invalid_year} is out of range. Using 1 month instead.')
 
         
         while True:
