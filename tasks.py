@@ -286,7 +286,7 @@ class NewsWebScraper:
         sheet.column_dimensions['A'].width = 25
         sheet.column_dimensions['B'].width = 50
         for col in ['C', 'D', 'E', 'F']:
-            sheet.column_dimensions[col].width = 20
+            sheet.column_dimensions[col].width = 25
         sheet.row_dimensions[1].height = 35
 
         sheet.title = 'NEWS'
