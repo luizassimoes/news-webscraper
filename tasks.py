@@ -79,7 +79,7 @@ class NewsWebScraper:
         else:
             self.logger.error(f'ERROR select_topic() | The topic {topic} does not exist. No topic selected.')
         
-    def get_element_list(self, element_selector, src=False):
+    def get_element_list(self, element_selector, src=False):  # src parameter gets img tags differently from text
         wait = WebDriverWait(self.driver, 10)
         retries = 2
         element_name = element_selector.split('-')[-1].split(' ')[0].title()  # Gets the element name to show in the log
@@ -202,7 +202,13 @@ class NewsWebScraper:
         n = 1 if n == 0 else abs(n)
 
         tomorrow = datetime.now() + timedelta(days=1)
-        n_months_ago = tomorrow - relativedelta(months=n)
+        try:
+            n_months_ago = tomorrow - relativedelta(months=n)
+        except:
+            n_months_ago = tomorrow - relativedelta(months=1)
+            invalid_year = tomorrow.year - int(n/12)
+            self.logger.warning(f'Year {invalid_year} is out of range.')
+
         
         while True:
             aux_titles = self.get_element_list('h3.promo-title a')
@@ -239,8 +245,7 @@ class NewsWebScraper:
                 if not url_suffix.startswith('p='):  # It means the amount of pages is over
                     break
 
-        if pic_urls:
-            filenames = self.download_pics(pic_urls)
+        filenames = self.download_pics(pic_urls)
 
         return titles, descriptions, dates, filenames
 
@@ -299,10 +304,6 @@ def main():
     query = work_items.get_work_item_variable("SEARCH_QUERY", default='teste')
     topic = work_items.get_work_item_variable("TOPIC", default='Business')
     n_months = work_items.get_work_item_variable("MONTHS", default=0)
-
-    query = 'heart'
-    topic = 'ADVISORS'
-    n_months = 48
 
     news_scraper = NewsWebScraper()
     news_scraper.logger.info('-'*60)
