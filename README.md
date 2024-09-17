@@ -1,6 +1,6 @@
 # news-webscraper
 
-The code from rpa.py aims to access the Los Angeles Times website, search (user entry), and get all the news from the last N (user entry) months from a specific topic (user entry). 
+The code from tasks.py aims to access the Los Angeles Times website, search (user entry), and get all the news from the last N (user entry) months from a specific topic (user entry). 
 
 ### The main steps:
 
