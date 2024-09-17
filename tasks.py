@@ -4,6 +4,8 @@ import time
 import shutil
 import logging
 from datetime import datetime, timedelta
+from dateutil import parser
+from dateutil.relativedelta import relativedelta
 from openpyxl import Workbook
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -11,8 +13,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from RPA.core.webdriver import start
 from RPA.Robocorp.WorkItems import WorkItems
-from dateutil import parser
-from dateutil.relativedelta import relativedelta
 
 workitem = WorkItems()
 
