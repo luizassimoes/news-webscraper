@@ -1,0 +1,11 @@
+name: news_web_scraper
+channels:
+  - defaults
+dependencies:
+  - python=3.11.8
+  - pip
+  - selenium
+  - openpyxl
+  - dateutil
+  - pip:
+    - RPA
