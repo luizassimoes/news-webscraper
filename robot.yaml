@@ -1,6 +1,6 @@
 tasks:
   Run Selenium Task:
-    shell: python3 -m tasks
+    shell: python tasks.py
 
 condaConfigFile: conda.yaml
 artifactsDir: output
