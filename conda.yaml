@@ -6,6 +6,6 @@ dependencies:
   - pip
   - pip:
       - rpaframework==28.6.2
-      - python-dateutil 
-      - openpyxl
-      - selenium
+      - python-dateutil
+      - openpyxl==3.1.5
+      - selenium==4.15.2
