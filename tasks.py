@@ -154,21 +154,19 @@ class NewsWebScraper:
         try:
             date = parser.parse(str(date_str))
             return date
-        except ValueError:
-            self.logger.warning(f'Date "{date_str}" not in format Month Day, Year. Trying another format...')
-
-        match_hour = re.match(r'(\d+)\s+hour[s]?\s+ago', str(date_str))      # Pattern for X hours ago
-        match_minute = re.match(r'(\d+)\s+minute[s]?\s+ago', str(date_str))  # Pattern for X minutes ago
-        if match_hour:
-            hours_ago = int(match_hour.group(1))
-            date = datetime.now() - timedelta(hours=hours_ago)
-            return date
-        elif match_minute:
-            minutes_ago = int(match_minute.group(1))
-            date = datetime.now() - timedelta(minutes=minutes_ago)
-            return date
-        else:
-            self.logger.error(f'ERROR parse_date() | Date "{date_str}" not in format X hours ago. Could not get date.')
+        except:  # Date format is hours or minutes
+            match_hour = re.match(r'(\d+)\s+hour[s]?\s+ago', str(date_str))      # Pattern for X hours ago
+            match_minute = re.match(r'(\d+)\s+minute[s]?\s+ago', str(date_str))  # Pattern for X minutes ago
+            if match_hour:
+                hours_ago = int(match_hour.group(1))
+                date = datetime.now() - timedelta(hours=hours_ago)
+                return date
+            elif match_minute:
+                minutes_ago = int(match_minute.group(1))
+                date = datetime.now() - timedelta(minutes=minutes_ago)
+                return date
+            else:
+                self.logger.error(f'ERROR parse_date() | Date "{date_str}" is invalid. Could not get date.')
 
     def get_news(self, n):
         titles = []
