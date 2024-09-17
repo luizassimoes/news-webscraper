@@ -261,7 +261,7 @@ def main():
     # n_months = workitem.get("MONTHS", default=1)
 
     query = 'euro'
-    topic = 'Business'
+    topic = 'Television'
     n_months = 1
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') #, filename='rpa.log')
