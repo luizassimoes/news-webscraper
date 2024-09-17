@@ -15,6 +15,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from RPA.core.webdriver import start
 # from RPA.Robocorp.WorkItems import WorkItems
 
+from topics_dict import topics_dict
+
 # workitem = WorkItems()
 
 
@@ -70,15 +72,11 @@ class NewsWebScraper:
         self.open_url(next_url)
 
     def select_topic(self, topic):
-        wait = WebDriverWait(self.driver, 10)
-        try:
-            see_all_btn = wait.until(EC.presence_of_element_located((By.XPATH, '//button[span[@class="see-all-text" and text()="See All"]]')))
-            see_all_btn.click()
-            checkbox = wait.until(EC.presence_of_element_located((By.XPATH, f'//label[span[text()="{topic}"]]/input')))
-            checkbox.click()
-            self.logger.info(f"Selected the topic: {topic}.")
-        except Exception as e:
-            self.logger.error(f"ERROR select_topic() | Could not find the topic: '{topic}'.")
+        current_url = self.driver.current_url
+        url_0, url_1 = current_url.rsplit('&', 1)
+        url_topic = url_0 + '&' + topics_dict[topic] + '&' + url_1
+        self.logger.info(f"Selected topic: {topic}.")
+        self.open_url(url_topic)
         
     def get_element_list(self, element_selector, src=False):
         wait = WebDriverWait(self.driver, 10)
