@@ -99,8 +99,8 @@ class NewsWebScraper:
         for i, url in enumerate(pic_urls):
             try:
                 self.driver.get(url)
-                width = 850
-                height = 705
+                width = 840
+                height = 640
                 self.driver.set_window_size(width, height)
 
                 filename = f'image_{i+1}'
