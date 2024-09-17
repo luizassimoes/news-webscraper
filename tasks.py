@@ -70,11 +70,15 @@ class NewsWebScraper:
         self.open_url(next_url)
 
     def select_topic(self, topic):
-        current_url = self.driver.current_url
-        url_0, url_1 = current_url.rsplit('&', 1)
-        url_topic = url_0 + '&' + topics_dict[topic] + '&' + url_1  # Topic goes between search and sort by
-        self.logger.info(f"Selected topic: {topic}.")
-        self.open_url(url_topic)
+        if topic in topics_dict.keys():
+            current_url = self.driver.current_url
+            url_0, url_1 = current_url.rsplit('&', 1)
+            url_topic = url_0 + '&' + topics_dict[topic] + '&' + url_1  # Topic goes between search and sort by
+            self.logger.info(f"Selected topic: {topic}.")
+            self.open_url(url_topic)
+        else:
+            self.logger.error(f'ERROR select_topic() | The topic {topic} does not exist. No topic selected.')
+
         
     def get_element_list(self, element_selector, src=False):
         wait = WebDriverWait(self.driver, 10)
@@ -174,7 +178,10 @@ class NewsWebScraper:
         pic_urls = []
         out_of_date =  False
 
-        n = 1 if n == 0 else n
+        n = 1 if n == 0 else abs(n)
+        if n < 0:
+            self.logger.warning(f'The number of months can not be negative: {n}. Using {abs(n)} instead.')
+
         tomorrow = datetime.now() + timedelta(days=1)
         n_months_ago = tomorrow - relativedelta(months=n)
         
