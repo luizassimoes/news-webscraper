@@ -1,10 +1,13 @@
 channels:
-  - defaults
   - conda-forge
 dependencies:
-  - python=3.11.8 
-  - rpaframework==28.6.2
   - openpyxl==3.1.5
-  - selenium==4.15.2
-  - python-dateutil
+  - python-dateutil==2.9.0
+
+  - python=3.11.8 
+
+  - pip=24.2
+  - pip: 
+    - rpaframework==28.6.2
+    - selenium==4.15.2
 
