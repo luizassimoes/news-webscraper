@@ -81,7 +81,7 @@ class NewsWebScraper:
         
     def get_element_list(self, element_selector, src=False):
         wait = WebDriverWait(self.driver, 10)
-        retries = 3
+        retries = 2
         element_name = element_selector.split('-')[-1].split(' ')[0].title()  # Gets the element name to show in the log
         for attempt in range(retries):  # Implement retries in case the page takes long to load
             try: 
@@ -94,7 +94,7 @@ class NewsWebScraper:
             except Exception as e:
                 self.logger.warning(f'Could not get {element_name} on attempt {attempt+1}. Retrying...')
                 if attempt == retries - 1:
-                    self.logger.error(f'ERROR get_element_list(): {element_name} | Error: {e}')
+                    self.logger.error(f'ERROR get_element_list(): {element_name} | Element not found.')
     
     def download_pics(self, pic_urls):
         filenames = []
@@ -105,7 +105,7 @@ class NewsWebScraper:
                 height = 560
                 self.driver.set_window_size(width, height)
 
-                filename = f'image_{i+1}.png'
+                filename = f'image_{str(i+1).zfill(2)}.png'
                 self.driver.save_screenshot(f'./output/{filename}')
                 self.logger.info(f'Downloaded {filename}.')
                 filenames.append(filename)
@@ -173,6 +173,7 @@ class NewsWebScraper:
         descriptions = []
         dates = []
         pic_urls = []
+        filenames = []
         out_of_date =  False
 
         try: 
@@ -193,6 +194,9 @@ class NewsWebScraper:
             aux_descriptions = self.get_element_list('p.promo-description')
             aux_dates = self.get_element_list('p.promo-timestamp')
             aux_pic_urls = self.get_element_list('picture img.image', src=True)
+
+            if aux_titles is None:
+                break
 
             for i, date_str in enumerate(aux_dates):
                 date_obj = self.parse_date(date_str)
@@ -220,7 +224,8 @@ class NewsWebScraper:
                 if not url_suffix.startswith('p='):  # It means the amount of pages is over
                     break
 
-        filenames = self.download_pics(pic_urls)
+        if pic_urls:
+            filenames = self.download_pics(pic_urls)
 
         return titles, descriptions, dates, filenames
 
@@ -292,13 +297,16 @@ def main():
     time.sleep(1)
 
     titles, descriptions, dates, filenames = news_scraper.get_news(n_months)
-    count_query = news_scraper.count_search_query(query, titles, descriptions)
-    contains_money = news_scraper.title_contains_money(titles)
+    if titles:
+        count_query = news_scraper.count_search_query(query, titles, descriptions)
+        contains_money = news_scraper.title_contains_money(titles)
 
-    news_data = [titles, descriptions, dates, filenames, count_query, contains_money]
-    
-    wb = news_scraper.to_excel(news_data)
-    wb.save('./output/News.xlsx')
+        news_data = [titles, descriptions, dates, filenames, count_query, contains_money]
+        
+        wb = news_scraper.to_excel(news_data)
+        wb.save('./output/News.xlsx')
+    else:
+        news_scraper.logger.error(f'Your search returned no News: {query}, topic {topic}.')
 
     news_scraper.close_all()
 
