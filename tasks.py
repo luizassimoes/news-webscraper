@@ -255,7 +255,7 @@ def main():
     url = 'https://www.latimes.com/'
 
     work_items = WorkItems()
-    work_items.load_work_item()
+    work_items.get_input_work_item()
     query = work_items.get_work_item_variable("QUERY", default='teste')
     topic = work_items.get_work_item_variable("TOPIC", default='Business')
     n_months = work_items.get_work_item_variable("MONTHS", default=0)
