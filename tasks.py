@@ -150,8 +150,9 @@ class NewsWebScraper:
 
     def next_page(self):
         current_url = self.driver.current_url
-        if current_url[-3:].startswith('p='):
-            next_url = current_url[:-1] + str(int(current_url[-1])+1)
+        url_preffix, url_suffix = current_url.rsplit('&', 1)
+        if url_suffix.startswith('p='):
+            next_url = url_preffix + '&p=' +  str(int(url_suffix.rsplit('=', 1)[-1])+1)
         else:
             next_url = current_url + '&p=2'
         self.logger.info(f"Next page.")
