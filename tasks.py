@@ -261,7 +261,7 @@ def main():
     n_months = work_items.get_work_item_variable("MONTHS", default=0)
     print(query)
     print(topic)
-    print(n_months)
+    print(n_months) 
 
     # query = 'euro'
     # topic = 'Television'
