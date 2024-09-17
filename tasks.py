@@ -100,23 +100,39 @@ class NewsWebScraper:
         for i, url in enumerate(pic_urls):
             try:
                 self.driver.get(url)
-                time.sleep(1)
-                filename = f'image_{i+1}.jpeg'
-
-                script = f"""
-                var link = document.createElement('a'); 
-                link.href = '{url}'; 
-                link.download = '{filename}'; 
-                link.click();
-                """
-                self.driver.execute_script(script)
+                img_element = self.driver.find_element_by_tag_name('img')
                 
-                time.sleep(1)
-                filenames.append(filename)
+                width = img_element.size['width']
+                height = img_element.size['height']
+                self.driver.set_window_size(width, height)
+
+                filename = f'image_{i}'
+                self.driver.save_screenshot(f'./outputs/{filename}.jpeg')
                 self.logger.info(f'Downloaded {filename}.')
+                filenames.append(filename)
             except Exception as e:
-                self.logger.error(f'Failed to download {url}: {e}')
-        return filenames
+                self.logger.error(f'ERROR download_pics() | Failed to download {url}: {e}')
+                filenames.append('')
+
+            return filenames
+        #         self.driver.get(url)
+        #         time.sleep(1)
+        #         filename = f'image_{i+1}.jpeg'
+
+        #         script = f"""
+        #         var link = document.createElement('a'); 
+        #         link.href = '{url}'; 
+        #         link.download = '{filename}'; 
+        #         link.click();
+        #         """
+        #         self.driver.execute_script(script)
+                
+        #         time.sleep(1)
+        #         filenames.append(filename)
+        #         self.logger.info(f'Downloaded {filename}.')
+        #     except Exception as e:
+        #         self.logger.error(f'Failed to download {url}: {e}')
+        # return filenames
 
     def count_search_query(self, query, titles, descriptions):
         query_count = []
