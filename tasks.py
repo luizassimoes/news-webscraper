@@ -86,11 +86,22 @@ class NewsWebScraper:
         for attempt in range(retries):  # Implement retries in case the page takes long to load
             try: 
                 elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, element_selector)))
-                self.logger.info(f'{element_name}s gotten on attempt {attempt+1}.')
                 if not src:
+                    self.logger.info(f'{element_name}s gotten on attempt {attempt+1}.')
                     return [element.text for element in elements]
                 else:
-                    return [element.get_attribute('src') for element in elements]
+                    src_index = 0
+                    src_list = []
+                    news_cards = self.driver.find_elements(By.CLASS_NAME, 'promo-wrapper')
+                    for card in news_cards:
+                        has_image = card.find_elements(By.TAG_NAME, "img")
+                        if has_image:
+                            src_list.append(elements[src_index].get_attribute('src'))
+                            src_index += 1
+                        else:
+                            src_list.append(None)
+                    self.logger.info(f'{element_name}s gotten on attempt {attempt+1}.')
+                    return src_list
             except Exception as e:
                 self.logger.warning(f'Could not get {element_name} on attempt {attempt+1}. Retrying...')
                 if attempt == retries - 1:
