@@ -3,7 +3,7 @@ tasks:
     shell: python tasks.py
 
 condaConfigFile: conda.yaml
-artifactsDir: outputs
+artifactsDir: output
 PATH:
   - .
 PYTHONPATH:
