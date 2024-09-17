@@ -217,6 +217,11 @@ class NewsWebScraper:
                 pic_urls.extend(aux_pic_urls.copy())
                 self.next_page()     
 
+                current_url = self.driver.current_url
+                url_suffix = current_url.rsplit('&', 1)[-1]
+                if not url_suffix.startswith('p='):  # It means the amount of pages is over
+                    break
+
         filenames = self.download_pics(pic_urls)
 
         return titles, descriptions, dates, filenames
