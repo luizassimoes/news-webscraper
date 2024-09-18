@@ -70,14 +70,15 @@ class NewsWebScraper:
         self.open_url(next_url)
 
     def select_topic(self, topic):
-        if topic.title() in topics_dict.keys():
+        topic = topic.title()
+        if topic in topics_dict.keys():
             current_url = self.driver.current_url
             url_0, url_1 = current_url.rsplit('&', 1)
-            url_topic = url_0 + '&' + topics_dict[topic.title()] + '&' + url_1  # Topic goes between search and sort by
-            self.logger.info(f"Selected topic: {topic.title()}.")
+            url_topic = url_0 + '&' + topics_dict[topic] + '&' + url_1  # Topic goes between search and sort by
+            self.logger.info(f"Selected topic: {topic}.")
             self.open_url(url_topic)
         else:
-            self.logger.error(f'ERROR select_topic() | The topic {topic} does not exist. No topic selected.')
+            self.logger.warning(f'The topic {topic} does not exist. No topic was selected.')
         
     def get_element_list(self, element_selector, src=False):
         """
