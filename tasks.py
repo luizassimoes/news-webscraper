@@ -315,6 +315,7 @@ def main():
     work_items.get_input_work_item()  # Gets the variables from the Robocloud Workspace
     query = work_items.get_work_item_variable("SEARCH_QUERY", default='teste')
     topic = work_items.get_work_item_variable("TOPIC", default='Business')
+    topic = str(topic).strip()
     n_months = work_items.get_work_item_variable("MONTHS", default=0)
 
     news_scraper = NewsWebScraper()
