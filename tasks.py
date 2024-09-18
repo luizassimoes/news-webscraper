@@ -338,7 +338,7 @@ def main():
         wb = news_scraper.to_excel(news_data)
         wb.save('./output/News.xlsx')
     else:
-        news_scraper.logger.error(f'Your search returned no News: {query}, topic {topic}.')
+        news_scraper.logger.error(f'Your search returned no News: {query}, topic: {topic}, months: {n_months}.')
 
     news_scraper.close_all()
 
