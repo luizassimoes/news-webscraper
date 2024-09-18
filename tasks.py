@@ -109,9 +109,10 @@ class NewsWebScraper:
                 self.logger.info(f'{element_name}s gotten on attempt {attempt+1}.')
                 return element_list
             except Exception as e:
-                self.logger.warning(f'Could not get {element_name} on attempt {attempt+1}. Retrying...')
                 if attempt == retries - 1:
                     self.logger.warning(f'Element not found: {element_name}.')
+                else:
+                    self.logger.warning(f'Could not get {element_name} on attempt {attempt+1}. Retrying...')
     
     def download_pics(self, pic_urls):
         filenames = []
