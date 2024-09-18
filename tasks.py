@@ -73,7 +73,7 @@ class NewsWebScraper:
         if topic.title() in topics_dict.keys():
             current_url = self.driver.current_url
             url_0, url_1 = current_url.rsplit('&', 1)
-            url_topic = url_0 + '&' + topics_dict[topic] + '&' + url_1  # Topic goes between search and sort by
+            url_topic = url_0 + '&' + topics_dict[topic.title()] + '&' + url_1  # Topic goes between search and sort by
             self.logger.info(f"Selected topic: {topic.title()}.")
             self.open_url(url_topic)
         else:
