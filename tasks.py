@@ -116,6 +116,7 @@ class NewsWebScraper:
     
     def download_pics(self, pic_urls):
         filenames = []
+        downloads = 0
         for i, url in enumerate(pic_urls):
             try:
                 if len(filenames) < 47:  # Total amount of files in Robocorp is 50 = Excel File + console.txt + env.yaml + 47 images
@@ -128,11 +129,12 @@ class NewsWebScraper:
                     self.driver.save_screenshot(f'./output/{filename}')
                     self.logger.info(f'Downloaded {filename}.')
                     filenames.append(filename)
+                    downloads += 1
                 else:
                     filenames.append('')
                     self.logger.warning(f'LIMIT EXCEEDED: Cannot upload more files to Robocorp.')
             except Exception as e:
-                self.logger.warning(f'Failed to download {url}.')
+                self.logger.warning(f'No image for news in row {i+2}.')  # Two more to reference the header and skip 0
                 filenames.append('')
         return filenames
 
