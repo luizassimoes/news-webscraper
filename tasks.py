@@ -81,10 +81,10 @@ class NewsWebScraper:
         
     def get_element_list(self, element_selector, src=False):
         """
-        Gets the elements from the web page. 
-        The src parameter allows the function to treat img tags. This part gets all the news displayed,
-        and checks if they have an image tag associated to it. If not, it registers None so the order of
-        the filenames are correctly organized according to the news in the final Excel file.        
+        Gets the elements from the web page. The src parameter allows the function to treat img tags.
+        The function captures all the news blocks and checks if they have the according element in it. 
+        If not, it registers an empty string so the order of the information is correctly organized in
+        the final Excel file.        
         """
         wait = WebDriverWait(self.driver, 10)
         retries = 2
@@ -92,22 +92,22 @@ class NewsWebScraper:
         for attempt in range(retries):  # Implement retries in case the page takes long to load
             try: 
                 elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, element_selector)))
-                if not src:
-                    self.logger.info(f'{element_name}s gotten on attempt {attempt+1}.')
-                    return [element.text for element in elements]
-                else:
-                    src_index = 0
-                    src_list = []
-                    news_cards = self.driver.find_elements(By.CLASS_NAME, 'promo-wrapper')
-                    for card in news_cards:
-                        has_image = card.find_elements(By.TAG_NAME, "img")
-                        if has_image:  # Handles news that do not have an image associated to it 
-                            src_list.append(elements[src_index].get_attribute('src'))
-                            src_index += 1 
+                news_cards = self.driver.find_elements(By.CLASS_NAME, 'promo-wrapper')
+                
+                element_idx = 0
+                element_list = []
+                for card in news_cards:
+                    has_element = card.find_elements(By.CSS_SELECTOR, element_selector)
+                    if has_element:
+                        if not src:
+                            element_list.append(elements[element_idx].text)
                         else:
-                            src_list.append(None)
-                    self.logger.info(f'{element_name}s gotten on attempt {attempt+1}.')
-                    return src_list
+                            element_list.append(elements[element_idx].get_attribute('src'))
+                        element_idx += 1
+                    else:
+                        element_list.append('')
+                self.logger.info(f'{element_name}s gotten on attempt {attempt+1}.')
+                return element_list
             except Exception as e:
                 self.logger.warning(f'Could not get {element_name} on attempt {attempt+1}. Retrying...')
                 if attempt == retries - 1:
