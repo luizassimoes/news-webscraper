@@ -193,7 +193,7 @@ class NewsWebScraper:
             else:
                 self.logger.error(f'ERROR parse_date() | Date "{date_str}" is invalid. Could not get date.')
 
-    def get_news(self, n):
+    def get_news(self, n):  # n = number of months
         titles = []
         descriptions = []
         dates = []
@@ -314,6 +314,7 @@ def main():
     work_items = WorkItems()
     work_items.get_input_work_item()  # Gets the variables from the Robocloud Workspace
     query = work_items.get_work_item_variable("SEARCH_QUERY", default='teste')
+    query = str(query)
     topic = work_items.get_work_item_variable("TOPIC", default='Business')
     topic = str(topic).strip()
     n_months = work_items.get_work_item_variable("MONTHS", default=0)
