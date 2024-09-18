@@ -120,7 +120,7 @@ class NewsWebScraper:
         downloads = 0
         for i, url in enumerate(pic_urls):
             try:
-                if len(filenames) < 47:  # Total amount of files in Robocorp is 50 = Excel File + console.txt + env.yaml + 47 images
+                if len(downloads) < 47:  # Total amount of files in Robocorp is 50 = Excel File + console.txt + env.yaml + 47 images
                     self.driver.get(url)
                     width = 840
                     height = 560
