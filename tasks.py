@@ -214,6 +214,7 @@ class NewsWebScraper:
         tomorrow = datetime.now() + timedelta(days=1)
         try:
             n_months_ago = tomorrow - relativedelta(months=n)
+            self.logger.info(f'Getting news until {n} month(s) ago.')
         except:
             n_months_ago = tomorrow - relativedelta(months=1)
             invalid_year = tomorrow.year - int(n/12)
@@ -227,7 +228,8 @@ class NewsWebScraper:
 
             aux_descriptions = self.get_element_list('p.promo-description')
             aux_dates = self.get_element_list('p.promo-timestamp')
-            aux_pic_urls = self.get_element_list('picture img.image', src=True)
+            get_pic_urls = self.get_element_list('picture img.image', src=True)
+            aux_pic_urls = get_pic_urls if get_pic_urls is not None else []
 
             for i, date_str in enumerate(aux_dates):
                 date_obj = self.parse_date(date_str)
