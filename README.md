@@ -1,20 +1,19 @@
-# news-webscraper
+# Los Angeles Times News Scraper
 
-The code from tasks.py aims to access the Los Angeles Times website, search (user entry), and get all the news from the last N (user entry) months from a specific topic (user entry). 
+This Python project is a web scraping tool designed to extract news articles from the Los Angeles Times website based on user input. The script allows users to search for a specific topic, filter the news by the latest N months, and collect key information from the results. The tool uses Selenium via the rpaframework for browser automation.
 
-### The main steps:
+### Key Features:
 
-1. Open the site by following the link: latimes.com
-2. Enter a phrase in the search field
-3. On the result page, select a news section and order the news by Newest
-4. Get the values: title, description, date, and picture
-5. Store in an Excel file: title, date, description, and picture filename
-6. Add a column for the count of search phrases in the title and description
-7. Add a column for True or False, depending on whether the title or description contains any amount of money<br>
-   Possible formats: $11.1 | $111,111.11 | 11 dollars | 11 USD
+- User Input-Driven Search: Users can enter a search phrase, a news section, and the number of months to filter.
+- Web Scraping: Automates interaction with the Los Angeles Times website, collecting news articles and saving relevant data.
+- Data Extraction: Extracts the following details for each news article:
+   - Title
+   - Publication date
+   - Description
+   - Associated image filename
 
-The idea is to get news until it reaches the period before the desired period.  
+- Excel File Output: Saves the collected data into an Excel file, with:
+   - A column for the count of search phrases in the title and description.
+   - A column indicating whether any mention of money (in various formats) appears in the title or description.
 
-### Rules:
-1. Do NOT use APIs or Web Requests
-2. Please leverage pure Python and pure Selenium (via rpaframework) without utilizing Robot Framework
+- No API or Web Requests: The script operates solely through browser automation without relying on APIs or external web requests.
